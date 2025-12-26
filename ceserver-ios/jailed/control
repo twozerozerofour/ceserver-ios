@@ -1,0 +1,9 @@
+Package: com.0xiuks.ceserver
+Name: ceserver
+Version: 1.0.0
+Architecture: iphoneos-arm64
+Description: ceserver-ios
+Maintainer: 0xiuks
+Author: xiu
+Section: System
+
