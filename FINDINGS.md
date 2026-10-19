@@ -21,6 +21,7 @@ Living queue of weaknesses and improvement opportunities for this fork of
 | F06 | 2026-10-18 | build | Single-target Makefiles (`arm64`, min iOS 12). Upstream issue #1 (iOS 8, "bad CPU type") fails by design; no arm64e slice. | `Makefile` (`TARGET := iphone:clang:latest:12.0`, `ARCHS := arm64`); issue #1 | Info | Won't fix — documented scope |
 | F07 | 2026-10-18 | positive | `recvall`/`sendall` are solid: `MSG_WAITALL`, `EINTR` retry, correct 0/-1 handling. Baseline I/O is trustworthy; protocol robustness issues are at the command layer, not the transport. | `jailed/ceserver.c:41-89` | Info | n/a |
 | F08 | 2026-10-18 | architecture | Jailed mode operates on the host process only (`mach_task_self()`), not arbitrary PIDs. This sandbox scope is a feature for target analysis and should stay documented so consuming agents do not expect cross-process attach in jailed mode. | `jailed/api.c:945-958` | Info | n/a |
+| F09 | 2026-10-19 | build | iOS SDK ≥26 hard-errors on `#include <mach/mach_vm.h>` ("mach_vm.h unsupported"); the snapshot only survived because it was built against an older SDK. Fix: drop the include and declare the used `mach_vm_*` functions as externs (the pattern the file already used for two of them). | CI run 39204965214 on iPhoneOS26.5 SDK; `api.c`/`debugger.c` in both targets | High | **Fixed** (CI-validated) |
 
 ## Priority order (current)
 
@@ -28,3 +29,6 @@ Living queue of weaknesses and improvement opportunities for this fork of
 2. F04 — connection cap (cheap hardening)
 3. F02 + F05 — size caps (cheap hardening)
 4. F03 — arm64e device validation (blocked on hardware access)
+
+F09 was fixed in the same week it was found — the loop works: CI builds are
+the gate, releases are the delivery.

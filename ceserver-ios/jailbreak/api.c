@@ -9,7 +9,6 @@
 #include <mach-o/loader.h>
 #include <mach/mach_host.h>
 #include <mach/vm_region.h>
-#include <mach/mach_vm.h>
 #include <pthread.h>
 #include <sys/param.h>
 #include <sys/sysctl.h>
@@ -20,6 +19,8 @@
 extern kern_return_t mach_vm_read_overwrite(vm_map_t target_task, mach_vm_address_t address, mach_vm_size_t size,
                                             mach_vm_address_t data, mach_vm_size_t *outsize);
 extern kern_return_t mach_vm_write(vm_map_t target_task, mach_vm_address_t address, vm_offset_t data, mach_msg_type_number_t dataCnt);
+extern kern_return_t mach_vm_protect(vm_map_t target_task, mach_vm_address_t address, mach_vm_size_t size, boolean_t set_maximum, vm_prot_t new_protection);
+extern kern_return_t mach_vm_region_recurse(vm_map_t target_task, mach_vm_address_t *address, mach_vm_size_t *size, natural_t *depth, vm_region_recurse_info_t info, mach_msg_type_number_t *infoCnt);
 
 int debug_log(const char *format, ...)
 {

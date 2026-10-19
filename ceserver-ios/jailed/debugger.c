@@ -11,13 +11,13 @@
 #include <mach/exception_types.h>
 #include <mach/exc.h>
 #include <mach/mach.h>
-#include <mach/mach_vm.h>
 #include <mach/ndr.h>
 #include <mach/thread_act.h>
 #include <mach/thread_status.h>
 
 #include "api.h"
 
+extern kern_return_t mach_vm_deallocate(vm_map_t target_task, mach_vm_address_t address, mach_vm_size_t size);
 
 #define S_USER ((uint32_t)(2u << 1))
 #define WCR_ENABLE ((uint32_t)(1u))
