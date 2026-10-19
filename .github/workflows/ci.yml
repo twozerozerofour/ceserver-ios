@@ -18,6 +18,7 @@ jobs:
       - name: Install Theos (official repos)
         run: |
           git clone --depth 1 --recursive https://github.com/theos/theos.git "$HOME/theos"
+          rm -rf "$HOME/theos/sdks"
           git clone --depth 1 https://github.com/theos/sdks.git "$HOME/theos/sdks"
           echo "THEOS=$HOME/theos" >> "$GITHUB_ENV"
           test -x "$HOME/theos/bin/dm.pl" || echo "::warning::dm.pl not executable"
