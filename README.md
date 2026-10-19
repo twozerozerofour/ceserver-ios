@@ -4,6 +4,14 @@ An iOS port of Cheat Engine's ceserver for jailed and jailbroken devices.
 Windows plugins add support for iOS stack traces and RTTI.  
 It may contain bugs or be unoptimized. Feedback is welcome.
 
+## About this fork
+
+Actively maintained as an RE arsenal tool: weaknesses found while using the
+tool in real projects are logged in [FINDINGS.md](FINDINGS.md) (consumers only
+add rows; fixes land here). Binary builds and versioned releases are produced
+by CI (macOS runners + Theos) on every push and tag — do not distribute ad-hoc
+binaries.
+
 ## Features
 Memory search/read/write, breakpoint/watchpoint, pointer scan, instruction patching, register patching, symbols, etc.  
 *Executable memory patching requires a jailbroken device.*

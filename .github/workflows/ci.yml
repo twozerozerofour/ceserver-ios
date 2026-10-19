@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Theos (official installer)
+        run: |
+          curl -fsSL https://get.theos.dev -o install-theos.sh
+          bash install-theos.sh
+          echo "THEOS=$HOME/theos" >> "$GITHUB_ENV"
+          "$HOME/theos/bin/nic.pl" 2>/dev/null || true
+
+      - name: Install iOS SDK
+        run: |
+          "$THEOS/bin/install-sdk" latest || echo "::warning::install-sdk failed; relying on Xcode-bundled SDKs"
+
+      - name: Build jailbreak tool
+        run: make -C ceserver-ios/jailbreak clean package FINALPACKAGE=1
+
+      - name: Build jailed dylib
+        run: make -C ceserver-ios/jailed clean package FINALPACKAGE=1
+
+      - name: Collect artifacts
+        run: |
+          mkdir -p dist
+          find ceserver-ios -name '*.deb' -exec cp -v {} dist/ \;
+          find ceserver-ios -path '*/.theos/obj/*' \( -name 'ceserver.dylib' -o -name 'ceserver' \) -exec cp -v {} dist/ \; || true
+          ls -la dist/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ceserver-ios-${{ github.sha }}
+          path: dist/
+
+      - name: Publish release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${{ github.ref_name }}" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            gh release upload "${{ github.ref_name }}" dist/* --clobber --repo "${{ github.repository }}"
+          else
+            gh release create "${{ github.ref_name }}" dist/* \
+              --repo "${{ github.repository }}" \
+              --title "${{ github.ref_name }}" \
+              --generate-notes
+          fi
