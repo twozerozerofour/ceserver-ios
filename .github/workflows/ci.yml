@@ -15,16 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Theos (official installer)
+      - name: Install Theos (official repos)
         run: |
-          curl -fsSL https://get.theos.dev -o install-theos.sh
-          bash install-theos.sh
+          git clone --depth 1 --recursive https://github.com/theos/theos.git "$HOME/theos"
+          git clone --depth 1 https://github.com/theos/sdks.git "$HOME/theos/sdks"
           echo "THEOS=$HOME/theos" >> "$GITHUB_ENV"
-          "$HOME/theos/bin/nic.pl" 2>/dev/null || true
-
-      - name: Install iOS SDK
-        run: |
-          "$THEOS/bin/install-sdk" latest || echo "::warning::install-sdk failed; relying on Xcode-bundled SDKs"
+          test -x "$HOME/theos/bin/dm.pl" || echo "::warning::dm.pl not executable"
 
       - name: Build jailbreak tool
         run: make -C ceserver-ios/jailbreak clean package FINALPACKAGE=1
