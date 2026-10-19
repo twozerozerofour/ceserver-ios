@@ -23,6 +23,9 @@ jobs:
           echo "THEOS=$HOME/theos" >> "$GITHUB_ENV"
           test -x "$HOME/theos/bin/dm.pl" || echo "::warning::dm.pl not executable"
 
+      - name: Install ldid (signing)
+        run: brew install ldid
+
       - name: Build jailbreak tool
         run: make -C ceserver-ios/jailbreak clean package FINALPACKAGE=1
 
