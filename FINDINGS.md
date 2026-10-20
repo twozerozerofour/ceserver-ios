@@ -2,9 +2,9 @@
 
 Evaluated findings this fork tracks and works on. The authoritative intake —
 including every entry's detection/handling experience — lives in the
-maintainer's central registry (`skills/findings/ceserver-ios.md` in the
-maintainer workspace); this file only mirrors the curated queue for
-visibility, and fixes ship here via CI releases.
+maintainer's central registry (private to the maintainer's workspace); this
+file only mirrors the curated queue for visibility, and fixes ship here via
+CI releases.
 
 ## Accepted (priority order)
 
